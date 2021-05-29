@@ -76,11 +76,11 @@ def get_population(year=2020):
 
 # Continents and Regions
 def get_countrycode():
-    df = pd.read_csv('venv//Lib//site-packages//countrycode//data//countrycode_data.csv'
-                       ).rename(columns={'iso3c':'country_alphacode',
-                                         'continent':'continent_name',
-                                         'region':'region_name'}
-                                )[['country_name', 'country_alphacode', 'continent_name', 'region_name']]
+    df = pd.read_csv('countrycode_data.csv').\
+        rename(columns={'iso3c':'country_alphacode',
+                        'continent':'continent_name',
+                         'region':'region_name'}
+        )[['country_name', 'country_alphacode', 'continent_name', 'region_name']]
     df['country_name'] = df['country_name'].str.capitalize()
     return df
 
