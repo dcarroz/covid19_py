@@ -150,3 +150,7 @@ importlib.reload(cf)
 webbrowser.open_new_tab('covid19map.html')
 webbrowser.open_new_tab('covid19bars.html')
 webbrowser.open_new_tab('covid19area.html')
+
+cb = cf.make_covid_bar(covid19, x='country_alphacode', y='CFR', color='continent_name',
+                  title='Infected by Countries', ytitle='Infected Rate',
+                  outfile='covid19bars', var_animation='week', facet_col='continent_name')

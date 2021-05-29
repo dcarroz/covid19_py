@@ -230,14 +230,15 @@ def make_covid_bar(data, x='country_alphacode', y='I_cum', name='country_name',
         data = data.assign(month=data.date.apply(lambda x: x.strftime('%b')))
         if facet_col_wrap == None: facet_col_wrap = 4
 
-    fig = px.bar(data, x=x, y=y, range_y=[0, data[y].max()],
+    fig = px.bar(data, x=x, y=y, #range_y=[0, data[y].max()],
                  color=color, hover_name=name,
                  animation_frame=var_animation, animation_group=name,
                  facet_col=facet_col, facet_col_wrap=facet_col_wrap)
     fig.update_layout(title=title, legend_title=ltitle)
     fig.update_xaxes(title=xtitle, categoryorder='total descending', nticks=len(data[x].unique()),
                      tickfont=dict(size=8, color='black'),
-                     rangeslider_visible=True)
+                     rangeslider_visible=True,
+                     matches=None)
     fig.update_yaxes(title=ytitle)
     if save: fig.write_html(outfile+'.html')
     return fig
