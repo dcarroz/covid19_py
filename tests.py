@@ -154,3 +154,51 @@ webbrowser.open_new_tab('covid19area.html')
 cb = cf.make_covid_bar(covid19, x='country_alphacode', y='CFR', color='continent_name',
                   title='Infected by Countries', ytitle='Infected Rate',
                   outfile='covid19bars', var_animation='week', facet_col='continent_name')
+
+cb = cf.make_covid_bar(covid19.groupby(['continent_name','date'],as_index=False).agg({'I':'sum'}),
+                       x='date', y='I', name='continent_name', color='continent_name',
+                       title='Infected by Countries', ytitle='Infected Rate',
+                       outfile='covid19bars', facet_col='continent_name',facet_col_wrap=1)
+
+covid19.query('country_aplhacode=="CHL"')
+
+px.bar(covid19.groupby(['continent_name','date'],as_index=False).agg({'I':'sum'}),
+       x='date', y='I', facet_col='continent_name', facet_col_wrap=1).\
+    update_yaxes(matches=None).\
+    update_traces(marker_color='yellow', marker_line_color=None).\
+    write_html('covid19bars.html')
+
+cb = cf.make_covid_bar(covid19.groupby(['continent_name','date'],as_index=False).agg({'I':'sum'}),
+                       x='date', y='I', name=None, color=None, xrange=None, yrange=None, kticks = 7,
+                       marker_color='yellow', marker_line_color='yellow', rangeslider_visible=False,
+                       title='Infected by Continents', xtitle=None, ytitle='Daily Infected',
+                       outfile='covid19bars', facet_col='continent_name',facet_col_wrap=1)
+
+cb = cf.make_covid_bar(covid19.groupby(['region_name','date'],as_index=False).agg({'I':'sum'}),
+                       x='date', y='I', name=None, color=None, xrange=None, yrange=None, kticks = 30,
+                       marker_color='yellow', marker_line_color='yellow', rangeslider_visible=False,
+                       title='Infected by Regions', xtitle=None, ytitle='Daily Infected',
+                       outfile='covid19bars', facet_col='region_name',facet_col_wrap=3)
+
+### Latitudes
+df = cf.get_Isocodes().assign(\
+    Hemisphere=lambda x: x.latitude.apply(lambda y: 'North' if y > 0 else 'Sourth'),\
+    Zone=lambda x: x.latitude.apply(lambda y: 'Tropical' if y < 23.27 and y > -23.27 else 'No Tropical'))
+
+cm = px.choropleth(df, locations='country_alphacode', hover_name='country_name',
+                   color='Hemisphere', color_discrete_sequence=['lightblue','tan'],
+                   title='Hemispheres').\
+    write_html('covid19map.html')
+
+cm = px.choropleth(df, locations='country_alphacode', hover_name='country_name',
+                   color='Zone', color_discrete_sequence=['lightgray','gold'],
+                   title='Intertropical Zone').\
+    write_html('covid19map.html')
+
+go.Figure(go.Scattergeo()).\
+    update_geos(visible=False, resolution=50,
+                showcountries=True, countrycolor="RebeccaPurple",
+                showland=True, landcolor="LightGreen",
+                showocean=True, oceancolor="LightBlue").\
+    update_layout(height=300, margin={"r":0,"t":0,"l":0,"b":0}).\
+    write_html('covid19map.html')

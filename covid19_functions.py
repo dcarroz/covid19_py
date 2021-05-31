@@ -211,34 +211,43 @@ def make_covid_map2(data, column='I', legend_name='',
     if save: m.save(outfile=outfile+'.html')
     return m
 
-def make_covid_bar(data, x='country_alphacode', y='I_cum', name='country_name',
-                   color='continent_name', var_animation=None,
-                   facet_col=None, facet_col_wrap=None,
-                   title='Infected by Countries',
+def make_covid_bar(data, x='country_alphacode', y='I_cum', name='country_name', color='continent_name',
+                   marker_color='yellow', marker_line_color=None, marker_line_width=1, opacity=1,
+                   title='Infected by Countries', kticks=None,
                    xtitle='Countries', ytitle='Infected Accumulated', ltitle='Continents',
+                   xrange='max', yrange='max', rangeslider_visible=True,
+                   facet_col=None, facet_col_wrap=None, var_animation=None,
                    save=True, outfile='covid19bars'):
     import plotly.express as px
 
-    if var_animation == 'date':
+    if 'date' in [var_animation, facet_col]:
         data = data.assign(date=data.date.apply(lambda x: x.strftime('%b %d, %Y')))
-    elif var_animation == 'week':
+    elif 'week' in [x, y, var_animation, facet_col]:
         data = data.assign(week=data.date.apply(lambda x: x.strftime('%Y-%WW')))
-
-    if facet_col == 'year':
-        data = data.assign(year=data.date.apply(lambda x: x.strftime('%Y')))
-    elif facet_col == 'month':
+    elif 'month' in [x, y, var_animation, facet_col]:
         data = data.assign(month=data.date.apply(lambda x: x.strftime('%b')))
+    elif 'year' in [x, y, var_animation, facet_col]:
+        data = data.assign(year=data.date.apply(lambda x: x.strftime('%Y')))
+
+    if facet_col == 'month':
         if facet_col_wrap == None: facet_col_wrap = 4
 
-    fig = px.bar(data, x=x, y=y, #range_y=[0, data[y].max()],
+    range_x = [0, data[x].max()] if xrange == 'max' else None
+    range_y = [0, data[y].max()] if yrange == 'max' else None
+    nticks = round(len(data[x].unique()) / (1 if kticks in [None,0] else kticks))
+
+    fig = px.bar(data, x=x, y=y, range_x=range_x, range_y=range_y,
                  color=color, hover_name=name,
                  animation_frame=var_animation, animation_group=name,
                  facet_col=facet_col, facet_col_wrap=facet_col_wrap)
     fig.update_layout(title=title, legend_title=ltitle)
-    fig.update_xaxes(title=xtitle, categoryorder='total descending', nticks=len(data[x].unique()),
+    fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)','paper_bgcolor': 'rgba(0, 0, 0, 0)',})
+    fig.update_xaxes(title=xtitle, categoryorder='total descending', nticks=nticks,
                      tickfont=dict(size=8, color='black'),
-                     rangeslider_visible=True,
+                     rangeslider_visible=rangeslider_visible,
                      matches=None)
-    fig.update_yaxes(title=ytitle)
+    fig.update_yaxes(title=ytitle, matches=None)
+    fig.update_traces(marker_color=marker_color, marker_line_color=marker_line_color,
+                      marker_line_width=marker_line_width, opacity=opacity)
     if save: fig.write_html(outfile+'.html')
     return fig

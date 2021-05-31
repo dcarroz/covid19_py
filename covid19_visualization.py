@@ -67,9 +67,59 @@ make_subplots(rows=2, cols=2, subplot_titles=('Daily Infected','Daily Deaths','I
 ### The pandemic by continent
 
 # daily Infected
-
+cb = cf.make_covid_bar(covid19.groupby(['continent_name','date'],as_index=False).agg({'I':'sum'}),
+                       x='date', y='I', name=None, color=None, xrange=None, yrange=None, kticks = 7,
+                       marker_color='yellow', marker_line_color='yellow', rangeslider_visible=False,
+                       title='Infected by Continents', xtitle=None, ytitle='Daily Infected',
+                       outfile='covid19bars', facet_col='continent_name',facet_col_wrap=1)
 # Acumulated Infected
+cb = cf.make_covid_bar(covid19.groupby(['continent_name','date'],as_index=False).agg({'I_cum':'sum'}),
+                       x='date', y='I_cum', name=None, color=None, xrange=None, yrange=None, kticks = 7,
+                       marker_color='yellow', marker_line_color='yellow', rangeslider_visible=False,
+                       title='Infected by Continents', xtitle=None, ytitle='Cumulated Infected',
+                       outfile='covid19bars', facet_col='continent_name',facet_col_wrap=1)
 
 # daily Deaths
+cb = cf.make_covid_bar(covid19.groupby(['continent_name','date'],as_index=False).agg({'D':'sum'}),
+                       x='date', y='D', name=None, color=None, xrange=None, yrange=None, kticks = 7,
+                       marker_color='red', marker_line_color='red', rangeslider_visible=False,
+                       title='Deaths by Continents', xtitle=None, ytitle='Daily Deaths',
+                       outfile='covid19bars', facet_col='continent_name',facet_col_wrap=1)
 
 # Acumulated Deaths
+cb = cf.make_covid_bar(covid19.groupby(['continent_name','date'],as_index=False).agg({'D_cum':'sum'}),
+                       x='date', y='D_cum', name=None, color=None, xrange=None, yrange=None, kticks = 7,
+                       marker_color='red', marker_line_color='red', rangeslider_visible=False,
+                       title='Deaths by Continents', xtitle=None, ytitle='Cumulated Deaths',
+                       outfile='covid19bars', facet_col='continent_name',facet_col_wrap=1)
+
+### The pandemic by Regions
+
+# daily Infected
+cb = cf.make_covid_bar(covid19.groupby(['region_name','date'],as_index=False).agg({'I':'sum'}),
+                       x='date', y='I', name=None, color=None, xrange=None, yrange=None, kticks = 7,
+                       marker_color='yellow', marker_line_color='yellow', rangeslider_visible=False,
+                       title='Infected by Regions', xtitle=None, ytitle='Daily Infected',
+                       outfile='covid19bars', facet_col='region_name',facet_col_wrap=3)
+
+# Acumulated Infected
+cb = cf.make_covid_bar(covid19.groupby(['region_name','date'],as_index=False).agg({'I_cum':'sum'}),
+                       x='date', y='I_cum', name=None, color=None, xrange=None, yrange=None, kticks = 7,
+                       marker_color='yellow', marker_line_color='yellow', rangeslider_visible=False,
+                       title='Infected by Regions', xtitle=None, ytitle='Cumulated Infected',
+                       outfile='covid19bars', facet_col='region_name',facet_col_wrap=3)
+
+# daily Deaths
+cb = cf.make_covid_bar(covid19.groupby(['region_name','date'],as_index=False).agg({'D':'sum'}),
+                       x='date', y='D', name=None, color=None, xrange=None, yrange=None, kticks = 7,
+                       marker_color='red', marker_line_color='red', rangeslider_visible=False,
+                       title='Deaths by Regions', xtitle=None, ytitle='Daily Deaths',
+                       outfile='covid19bars', facet_col='region_name',facet_col_wrap=3)
+
+# Acumulated Deaths
+cb = cf.make_covid_bar(covid19.groupby(['region_name','date'],as_index=False).agg({'D_cum':'sum'}),
+                       x='date', y='D_cum', name=None, color=None, xrange=None, yrange=None, kticks = 7,
+                       marker_color='red', marker_line_color='red', rangeslider_visible=False,
+                       title='Deaths by Regions', xtitle=None, ytitle='Cumulated Deaths',
+                       outfile='covid19bars', facet_col='region_name',facet_col_wrap=3)
+
